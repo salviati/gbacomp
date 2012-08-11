@@ -31,7 +31,7 @@ import (
 var (
 	testdata  [][]byte
 	testfiles = []string{"testdata/Mark.Twain-Tom.Sawyer.txt", "testdata/e.txt", "testdata/pi.txt"}
-	methods   = []Method{RLE, LZ77, Huffman4, Huffman8}
+	methods   = []Method{RLE, LZ77, /*Huffman4,*/ Huffman8}
 )
 
 func load(path string) []byte {
