@@ -34,10 +34,10 @@ import (
 type Method int
 
 const (
-	RLE Method = iota
-	LZ77
-	Huffman4
-	Huffman8
+	RLE      Method = 0x30
+	LZ77     Method = 0x10
+	Huffman4 Method = 0x24
+	Huffman8 Method = 0x28
 )
 
 func (m Method) String() string {
@@ -107,10 +107,11 @@ func exec(compress bool, method Method, data []byte) ([]byte, error) {
 	return output, nil
 }
 
-func Decompress(method Method, data []byte) ([]byte, error) {
-	return exec(false, method, data)
+func Decompress(data []byte) (decompressed []byte, err error) {
+	return exec(false, Method(data[0]), data)
 }
 
-func Compress(method Method, data []byte) ([]byte, error) {
+// Compresses data using a given method.
+func Compress(method Method, data []byte) (compressed []byte, err error) {
 	return exec(true, method, data)
 }

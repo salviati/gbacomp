@@ -76,7 +76,7 @@ func TestRLE(t *testing.T) {
 				t.Error("Compress:", err)
 			}
 
-			d, err := Decompress(method, c)
+			d, err := Decompress(c)
 
 			if err != nil {
 				t.Error("Decompress:", err)
