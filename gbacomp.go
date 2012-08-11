@@ -20,7 +20,6 @@
    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
 package gbacomp
 
 //#include "cprs.h"
@@ -37,27 +36,27 @@ type Method int
 const (
 	RLE Method = iota
 	LZ77
-	Huffman4 
+	Huffman4
 	Huffman8
 )
 
 func (m Method) String() string {
 	switch m {
-		case Huffman4:
-			return "Huffman4"
-		case Huffman8:
-			return "Huffman8"
-		case RLE:
-			return "RLE"
-		case LZ77:
-			return "LZ77"
+	case Huffman4:
+		return "Huffman4"
+	case Huffman8:
+		return "Huffman8"
+	case RLE:
+		return "RLE"
+	case LZ77:
+		return "LZ77"
 	}
 	return ""
 }
 
 var (
 	UnexpectedError = errors.New("Unexpected error")
-	UnknownMethod = errors.New("Unexpected method")
+	UnknownMethod   = errors.New("Unexpected method")
 )
 
 func exec(compress bool, method Method, data []byte) ([]byte, error) {
@@ -98,11 +97,13 @@ func exec(compress bool, method Method, data []byte) ([]byte, error) {
 	defer C.free(unsafe.Pointer(dst.data))
 
 	n := dst.width * dst.height
-	if n == 0 { return []byte{}, UnexpectedError }
+	if n == 0 {
+		return []byte{}, UnexpectedError
+	}
 
 	output := make([]byte, n)
 	C.memcpy(unsafe.Pointer(&output[0]), unsafe.Pointer(dst.data), C.size_t(n))
-	
+
 	return output, nil
 }
 

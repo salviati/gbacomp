@@ -20,26 +20,29 @@
    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
 package gbacomp
 
 import (
-	"testing"
-	"os"
 	"io/ioutil"
+	"os"
+	"testing"
 )
 
 var (
-	testdata [][]byte
-	testfiles = []string{"testdata/Mark.Twain-Tom.Sawyer.txt","testdata/e.txt","testdata/pi.txt"}
-	methods = []Method{ RLE, LZ77, Huffman4, Huffman8 }
+	testdata  [][]byte
+	testfiles = []string{"testdata/Mark.Twain-Tom.Sawyer.txt", "testdata/e.txt", "testdata/pi.txt"}
+	methods   = []Method{RLE, LZ77, Huffman4, Huffman8}
 )
 
 func load(path string) []byte {
 	f, err := os.Open(path)
-	if err != nil { panic(err) }
+	if err != nil {
+		panic(err)
+	}
 	data, err := ioutil.ReadAll(f)
-	if err != nil { panic(err) }
+	if err != nil {
+		panic(err)
+	}
 	return data
 }
 
@@ -51,11 +54,15 @@ func init() {
 	}
 }
 
-func cmp(orig,prod []byte) (ok bool, n int) {
-	if len(orig) > len(prod) { return false,-1}
-	
-	for i:=0; i<len(orig); i++ {
-		if orig[i] != prod[i] { return false, i}
+func cmp(orig, prod []byte) (ok bool, n int) {
+	if len(orig) > len(prod) {
+		return false, -1
+	}
+
+	for i := 0; i < len(orig); i++ {
+		if orig[i] != prod[i] {
+			return false, i
+		}
 	}
 	return true, -1
 }
@@ -68,13 +75,13 @@ func TestRLE(t *testing.T) {
 			if err != nil {
 				t.Error("Compress:", err)
 			}
-			
+
 			d, err := Decompress(method, c)
-			
+
 			if err != nil {
-				t.Error("Decompress:",err)
+				t.Error("Decompress:", err)
 			}
-			
+
 			if ok, n := cmp(data, d); !ok {
 				t.Error("Decompressed data is not the same as the original one. Original length:", len(data), "After compression & decompression:", len(d), "Differs at position:", n)
 				//t.Error("Output:", d)
