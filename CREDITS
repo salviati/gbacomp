@@ -1,0 +1,6 @@
+Jasper Vijn (LZSS and RLE encoder/decoders, http://www.coranac.com/projects/grit/ LZZ7 code licensed under GPL, RLE code license under MIT license)
+CUE (Huffman encoder, http://gbatemp.net/user/81-cue/. GPLv3)
+Forgotten and the VBA development team (Huffman decoder, http://sourceforge.net/projects/vba/ GPLv2)
+testdata/* borrowed from Go project (BSD)
+
+gbacomp.go and gbacomp_test.go are licensed under GPL.
