@@ -76,6 +76,8 @@ func TestRLE(t *testing.T) {
 				t.Error("Compress:", err)
 			}
 
+			t.Log("Compressed size:", len(c))
+
 			d, err := Decompress(c)
 
 			if err != nil {

@@ -40,6 +40,9 @@
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #include "cprs.h"
+#include <stdlib.h>
+#include <string.h>
+//#include <stdio.h>
 
 uint huffman_decode_vba(RECORD *rec_dst, const RECORD *rec_src)
 {
@@ -52,6 +55,14 @@ uint huffman_decode_vba(RECORD *rec_dst, const RECORD *rec_src)
 	u32 writeValue = 0;
 	
 	u8 *in = rec_src->data;
+
+	u32 insize = rec_src->width * rec_src->height;
+	u32 leftover = insize & 3;
+	if (leftover) {
+		in = calloc(insize + (4-leftover),1);
+		memcpy(in, rec_src->data, insize);
+	}
+
 	src = in;
 
 	if(src[0] != CPRS_HUFF8_TAG && src[0] != CPRS_HUFF4_TAG)
@@ -82,7 +93,6 @@ uint huffman_decode_vba(RECORD *rec_dst, const RECORD *rec_src)
 	int byteShift = 0;
 	int byteCount = 0;
 
-	
 	if(rec_src->data[0] == CPRS_HUFF8_TAG)
 	{
 		while(len > 0)
@@ -127,7 +137,14 @@ uint huffman_decode_vba(RECORD *rec_dst, const RECORD *rec_src)
 					}
 				}
 				mask >>= 1;
-			if(mask == 0) {
+			if(mask == 0)
+			{
+				if (src-in >= insize)
+				{
+					//fprintf(stderr, "%s:%d: force break\n", __FILE__, __LINE__);
+					break;
+				}
+
 				mask = 0x80000000;
 				data = read32le(src);
 
@@ -196,13 +213,19 @@ uint huffman_decode_vba(RECORD *rec_dst, const RECORD *rec_src)
 			mask >>= 1;
 			if(mask == 0)
 			{
+				if (src-in > insize)
+				{
+					//fprintf(stderr, "%s:%d: force break\n", __FILE__, __LINE__);
+					break;
+				}
+				
 				mask = 0x80000000;
 				data = read32le(src);
+
 				src += 4;
 			}
 		}
     }
-
 	rec_dst->width = 1;
 	rec_dst->height = dst - out;
 
