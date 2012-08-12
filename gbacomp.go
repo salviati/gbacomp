@@ -131,7 +131,7 @@ func Compress(method Method, data []byte) (compressed []byte, err error) {
 	return exec(true, method, data)
 }
 
-func NewDecompresser(r io.Reader) (io.Reader, error) {
+func NewDecompressor(r io.Reader) (io.Reader, error) {
 	read, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, err
