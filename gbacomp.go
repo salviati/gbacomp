@@ -41,6 +41,8 @@ const (
 	LZ77     Method = 0x10
 	Huffman4 Method = 0x24
 	Huffman8 Method = 0x28
+	
+	MaxSize = 0x00ffffff
 )
 
 func (m Method) String() string {
@@ -60,9 +62,14 @@ func (m Method) String() string {
 var (
 	UnexpectedError = errors.New("Unexpected error")
 	UnknownMethod   = errors.New("Unexpected method")
+	InputTooLarge   = errors.New("Input data is too large") // Uncompressed data length wouldn't fit in header if any larger.
 )
 
 func exec(compress bool, method Method, data []byte) ([]byte, error) {
+	if compress && len(data) > MaxSize {
+		return []byte{}, InputTooLarge
+	}
+
 	src := new(C.RECORD)
 	src.width = 1
 	src.height = C.int(len(data))
