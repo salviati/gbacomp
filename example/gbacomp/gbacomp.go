@@ -53,5 +53,6 @@ func main() {
 		}
 	}
 	
-	out.Write(outData)
+	_, err = out.Write(outData)
+	chk(err)
 }
