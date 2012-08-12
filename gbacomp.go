@@ -41,7 +41,7 @@ const (
 	LZ77     Method = 0x10
 	Huffman4 Method = 0x24
 	Huffman8 Method = 0x28
-	
+
 	MaxSize = 0x00ffffff
 )
 

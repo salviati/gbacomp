@@ -1,19 +1,19 @@
 package main
 
 import (
-	"github.com/salviati/gbacomp"
 	"flag"
+	"github.com/salviati/gbacomp"
+	"io/ioutil"
 	"log"
 	"os"
-	"io/ioutil"
 )
 
 var (
-	method = flag.String("method", "", "Compression method: rle,lz77,huff8,huff4. When not set, does decompression instead.")
-	inname = flag.String("i", "", "input filename")
+	method  = flag.String("method", "", "Compression method: rle,lz77,huff8,huff4. When not set, does decompression instead.")
+	inname  = flag.String("i", "", "input filename")
 	outname = flag.String("o", "", "output filename")
-	
-	gbacompMethod = map[string]gbacomp.Method{"lz77": gbacomp.LZ77, "rle": gbacomp.RLE, "huff4":gbacomp.Huffman4, "huff8":gbacomp.Huffman8 }
+
+	gbacompMethod = map[string]gbacomp.Method{"lz77": gbacomp.LZ77, "rle": gbacomp.RLE, "huff4": gbacomp.Huffman4, "huff8": gbacomp.Huffman8}
 )
 
 func chk(err error) {
@@ -24,23 +24,23 @@ func chk(err error) {
 
 func main() {
 	flag.Parse()
-	
+
 	if *inname == "" || *outname == "" {
 		flag.PrintDefaults()
 		return
 	}
-	
-	in , err := os.Open(*inname)
+
+	in, err := os.Open(*inname)
 	chk(err)
 
-	out, err := os.OpenFile(*outname, os.O_WRONLY | os.O_CREATE, 0666)
+	out, err := os.OpenFile(*outname, os.O_WRONLY|os.O_CREATE, 0666)
 	chk(err)
-	
+
 	inData, err := ioutil.ReadAll(in)
 	chk(err)
-	
+
 	var outData []byte
-	
+
 	if *method == "" {
 		outData, err = gbacomp.Decompress(inData)
 		chk(err)
@@ -52,7 +52,7 @@ func main() {
 			log.Fatal("unknown method", *method)
 		}
 	}
-	
+
 	_, err = out.Write(outData)
 	chk(err)
 }
