@@ -21,6 +21,7 @@
 */
 
 // GBA (de)compression functions supported by GBA BIOS.
+//
 // See http://nocash.emubase.de/gbatek.htm#biosdecompressionfunctions for details.
 package gbacomp
 
@@ -46,7 +47,9 @@ const (
 	LZ77     Method = 0x10
 	Huffman4 Method = 0x24
 	Huffman8 Method = 0x28
+)
 
+const (
 	MaxSize = 0x00ffffff
 )
 
