@@ -9,12 +9,11 @@ import (
 )
 
 var (
-	//method = flag.String("method", "", "Compression method: rle,lz77,huff8,huff4. When not set, does decompression instead.")
-	method = flag.String("method", "", "Compression method: rle,lz77,huff8. When not set, does decompression instead.")
+	method = flag.String("method", "", "Compression method: rle,lz77,huff8,huff4. When not set, does decompression instead.")
 	inname = flag.String("i", "", "input filename")
 	outname = flag.String("o", "", "output filename")
 	
-	gbacompMethod = map[string]gbacomp.Method{"lz77": gbacomp.LZ77, "rle": gbacomp.RLE, /*"huff4":gbacomp.Huffman4,*/ "huff8":gbacomp.Huffman8 }
+	gbacompMethod = map[string]gbacomp.Method{"lz77": gbacomp.LZ77, "rle": gbacomp.RLE, "huff4":gbacomp.Huffman4, "huff8":gbacomp.Huffman8 }
 )
 
 func chk(err error) {

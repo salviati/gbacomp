@@ -37,16 +37,16 @@ import (
 type Method int
 
 const (
-	RLE  Method = 0x30
-	LZ77 Method = 0x10
-	//Huffman4 Method = 0x24
+	RLE      Method = 0x30
+	LZ77     Method = 0x10
+	Huffman4 Method = 0x24
 	Huffman8 Method = 0x28
 )
 
 func (m Method) String() string {
 	switch m {
-	/*case Huffman4:
-	return "Huffman4"*/
+	case Huffman4:
+		return "Huffman4"
 	case Huffman8:
 		return "Huffman8"
 	case RLE:
@@ -70,12 +70,12 @@ func exec(compress bool, method Method, data []byte) ([]byte, error) {
 	dst := new(C.RECORD)
 
 	switch method {
-	/*case Huffman4:
-	if compress {
-		C.huffman_encode(dst, src, 4)
-	} else {
-		C.huffman_decode(dst, src)
-	}*/
+	case Huffman4:
+		if compress {
+			C.huffman_encode(dst, src, 4)
+		} else {
+			C.huffman_decode(dst, src)
+		}
 	case Huffman8:
 		if compress {
 			C.huffman_encode(dst, src, 8)

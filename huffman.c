@@ -140,7 +140,7 @@ char *Load(char *file, int filelen) {
 char *Memory(int length, int size) {
   char *fb;
 
-  fb = (char *) calloc(length * size, size); // FIXME(utkan): This doesn't look quite correct.
+  fb = (char *) calloc(length, size); // FIXME(utkan): This doesn't look quite correct.
   if (fb == NULL) EXIT("\nMemory error\n");
 
   return(fb);
@@ -212,7 +212,7 @@ char* HUF_Decode(char *file, int filelen, unsigned int *outsize) {
     }
 
     if (ch) {
-      *raw = (*raw << num_bits) | pos;
+      *raw |=  pos << nbits;
       if (!(nbits = (nbits + num_bits) & 7)) raw++;
 
       pos = *(tree + 1);
@@ -325,7 +325,7 @@ char *HUF_Code(unsigned char *raw_buffer, int raw_len, int *new_len) {
     ch = *raw++;
 
     for (nbits = 8; nbits; nbits -= num_bits) {
-      code = codes[ch >> (8 - num_bits)];
+      code = codes[ch & ((1 << num_bits)-1)];
       if (code == NULL) EXIT(", ERROR: code without codework!"); // never!
 
       len   = code->nbits;
@@ -345,7 +345,7 @@ char *HUF_Code(unsigned char *raw_buffer, int raw_len, int *new_len) {
         }
       }
 
-      ch = (ch << num_bits) & 0xFF;
+      ch >>= num_bits;
     }
   }
 
@@ -525,7 +525,7 @@ int HUF_CreateCodeBranch(huffman_node *root, unsigned int p, unsigned int q) {
   unsigned int  l_leafs, r_leafs;
 
   if (root->leafs <= HUF_NEXT + 1) {
-    stack = (huffman_node **) Memory(root->leafs, sizeof(huffman_node *));
+    stack = (huffman_node **) Memory(2*root->leafs, sizeof(huffman_node *));
 
     s = r = 0;
     stack[r++] = root;
