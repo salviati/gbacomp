@@ -27,15 +27,18 @@ package gbacomp
 import "C"
 
 import (
+	"bytes"
 	"errors"
+	"io"
+	"io/ioutil"
 	"unsafe"
 )
 
 type Method int
 
 const (
-	RLE      Method = 0x30
-	LZ77     Method = 0x10
+	RLE  Method = 0x30
+	LZ77 Method = 0x10
 	//Huffman4 Method = 0x24
 	Huffman8 Method = 0x28
 )
@@ -43,7 +46,7 @@ const (
 func (m Method) String() string {
 	switch m {
 	/*case Huffman4:
-		return "Huffman4"*/
+	return "Huffman4"*/
 	case Huffman8:
 		return "Huffman8"
 	case RLE:
@@ -68,11 +71,11 @@ func exec(compress bool, method Method, data []byte) ([]byte, error) {
 
 	switch method {
 	/*case Huffman4:
-		if compress {
-			C.huffman_encode(dst, src, 4)
-		} else {
-			C.huffman_decode(dst, src)
-		}*/
+	if compress {
+		C.huffman_encode(dst, src, 4)
+	} else {
+		C.huffman_decode(dst, src)
+	}*/
 	case Huffman8:
 		if compress {
 			C.huffman_encode(dst, src, 8)
@@ -114,4 +117,40 @@ func Decompress(data []byte) (decompressed []byte, err error) {
 // Compresses data using a given method.
 func Compress(method Method, data []byte) (compressed []byte, err error) {
 	return exec(true, method, data)
+}
+
+func NewDecompresser(r io.Reader) (io.Reader, error) {
+	read, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+	decompressed, err := Decompress(read)
+	if err != nil {
+		return nil, err
+	}
+	return bytes.NewReader(decompressed), nil
+}
+
+func NewCompressor(w io.Writer, m Method) io.WriteCloser {
+	return &Compresser{bytes.NewBuffer([]byte{}), m, w}
+}
+
+type Compresser struct {
+	*bytes.Buffer
+	m Method
+	w io.Writer
+}
+
+// The data will be compressed & flushed during Close.
+func (c *Compresser) Close() error {
+	compressed, err := Compress(c.m, []byte(c.String()))
+	if err != nil {
+		return err
+	}
+	_, err = c.w.Write(compressed)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
