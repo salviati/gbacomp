@@ -140,7 +140,7 @@ char *Load(char *file, int filelen) {
 char *Memory(int length, int size) {
   char *fb;
 
-  fb = (char *) calloc(length, size); // FIXME(utkan): This doesn't look quite correct.
+  fb = (char *) calloc(length, size);
   if (fb == NULL) EXIT("\nMemory error\n");
 
   return(fb);
