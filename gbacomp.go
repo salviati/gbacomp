@@ -20,7 +20,12 @@
    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+// GBA (de)compression functions supported by GBA BIOS.
+// See http://nocash.emubase.de/gbatek.htm#biosdecompressionfunctions for details.
 package gbacomp
+
+// TODO(utkan); LZ77 VRAM-safe
+// TODO(utkan); Diff8/Diff16 filters
 
 //#include "cprs.h"
 //#include <string.h>
