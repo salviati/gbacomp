@@ -25,6 +25,11 @@ func chk(err error) {
 func main() {
 	flag.Parse()
 	
+	if *inname == "" || *outname == "" {
+		flag.PrintDefaults()
+		return
+	}
+	
 	in , err := os.Open(*inname)
 	chk(err)
 
