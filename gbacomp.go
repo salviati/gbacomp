@@ -44,7 +44,7 @@ type Method int
 
 const (
 	RLE      Method = 0x30
-	LZ77     Method = 0x10
+	LZ77     Method = 0x10 // VRAM-safe LZSS
 	Huffman4 Method = 0x24
 	Huffman8 Method = 0x28
 )
@@ -147,17 +147,17 @@ func NewDecompressor(r io.Reader) (io.Reader, error) {
 }
 
 func NewCompressor(w io.Writer, m Method) io.WriteCloser {
-	return &Compresser{bytes.NewBuffer([]byte{}), m, w}
+	return &Compressor{bytes.NewBuffer([]byte{}), m, w}
 }
 
-type Compresser struct {
+type Compressor struct {
 	*bytes.Buffer
 	m Method
 	w io.Writer
 }
 
 // The data will be compressed & flushed during Close.
-func (c *Compresser) Close() error {
+func (c *Compressor) Close() error {
 	compressed, err := Compress(c.m, []byte(c.String()))
 	if err != nil {
 		return err

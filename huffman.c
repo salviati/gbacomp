@@ -235,7 +235,7 @@ char* HUF_Decode(char *file, int filelen, unsigned int *outsize) {
 
 /*----------------------------------------------------------------------------*/
 uint huffman_encode(RECORD *dst, const RECORD *src, int data_len) {
-	if (data_len != 4 && data_len != 8) {
+	if (data_len != 4 && data_len != 8) { // TODO(utkan): Huffman1 would be useful when compressing binary data such as obstruction layer; import from upstream.
 		return 0;
 	}
 	
